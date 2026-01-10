@@ -1,0 +1,104 @@
+import * as React from 'react';
+import Card from '@mui/material/Card';
+import Container from '@mui/material/Container';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import { Grid } from '@mui/material';
+import { TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+import { useContext } from 'react';
+import { TodoContext } from '../contexts/todoContext';
+import { useEffect } from 'react';
+// components 
+import ToDo from './ToDo';
+//  OTHERS
+import { v4 as uuidv4 } from 'uuid';
+export default function ToDoList() {
+    const { todoArr, SetToDoArr } = useContext(TodoContext);
+    // Start State
+    const [displayedTodoType, setDisplayedTodoType] = React.useState('all');
+    const [title, setTitle] = React.useState("");
+    // End State    
+    // start function handleChange
+    const handleChange = (e) => {
+        setDisplayedTodoType(e.target.value);
+    }
+    const handleChangeTitle = (e) => {
+        setTitle(e.target.value);
+    }
+    const clickButtonAddToDo = () => {
+        if (title.trim() !== "") {
+            const updateTodo = [...todoArr, { id: uuidv4(), title: title, details: "", isCompleted: false }];
+            SetToDoArr(updateTodo);
+            localStorage.setItem("todos", JSON.stringify(updateTodo));
+            setTitle("");
+        }
+    }
+    useEffect(() => {
+        const update = JSON.parse(localStorage.getItem("todos")) || [];
+        SetToDoArr(update);
+    }, []);
+    // filter array 
+    const completedTodos = todoArr.filter((t) => {
+        return t.isCompleted;
+    })
+    const notCompletedTodos = todoArr.filter((t) => {
+        return !t.isCompleted;
+    })
+    let todoToBeRendered = todoArr;
+    if (displayedTodoType == "completed") {
+        todoToBeRendered = completedTodos;
+    } else if (displayedTodoType == "non-completed") {
+        todoToBeRendered = notCompletedTodos;
+    }
+    const todosJSX = todoToBeRendered.map((todo) => {
+        return (
+            <ToDo key={todo.id} todo={todo} />
+        )
+    })
+
+
+
+    // End function handleChange
+    return (
+        <Container maxWidth="sm"  >
+            <Card sx={{ minWidth: 500, textAlign: "center", maxHeight:"80vh", overflowY:"auto   " }}>
+                <CardContent >
+                    <Typography variant='h3' sx={{ fontWeight: "bold" }}>
+                        مهامي
+                    </Typography>
+                    <Divider sx={{ mb: 3 }} />
+                    {/*=== FILTER BUTTON ===*/}
+                    <ToggleButtonGroup
+                        color="primary"
+                        value={displayedTodoType}
+                        exclusive
+                        onChange={handleChange}
+                        sx={{ direction: "ltr" }}
+                    >
+                        <ToggleButton value="non-completed" >غير منجز</ToggleButton>
+                        <ToggleButton value="completed" >منجز</ToggleButton>
+                        <ToggleButton value="all">الكل</ToggleButton>
+                    </ToggleButtonGroup>
+                    {/*=== END FILTER BUTTON ===*/}
+                    {/* all ToDo  */}
+                    {todosJSX}
+                    {/* all ToDo  */}
+                    {/* === ADD BUTTON + INPUT === */}
+                    <Grid container sx={{ mt: 2 }} spacing={2}>
+                        <Grid size={8} >
+                            <TextField label="عنوان المهمة" value={title} fullWidth variant='outlined' onChange={handleChangeTitle}></TextField>
+                        </Grid>
+                        <Grid size={4} >
+                            <Button onClick={clickButtonAddToDo} fullWidth sx={{ fontWeight: "700", height: "100%", backgroundColor: "#cf3a0dff" }} variant="contained">إضافة</Button>
+                        </Grid>
+                    </Grid>
+                    {/* === ADD BUTTON + INPUT === */}
+                </CardContent>
+            </Card>
+        </Container>
+    );
+}
