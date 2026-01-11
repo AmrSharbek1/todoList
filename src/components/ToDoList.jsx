@@ -9,9 +9,8 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { Grid } from '@mui/material';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-import { useContext } from 'react';
 import { TodoContext } from '../contexts/todoContext';
-import { useEffect } from 'react';
+import { useContext,useEffect, useMemo } from 'react';
 // components 
 import ToDo from './ToDo';
 //  OTHERS
@@ -42,12 +41,16 @@ export default function ToDoList() {
         SetToDoArr(update);
     }, []);
     // filter array 
-    const completedTodos = todoArr.filter((t) => {
-        return t.isCompleted;
-    })
-    const notCompletedTodos = todoArr.filter((t) => {
-        return !t.isCompleted;
-    })
+    const completedTodos = useMemo(() => {
+        return todoArr.filter((t) => {  
+            return t.isCompleted;
+        })
+    }, [todoArr])
+    const notCompletedTodos = useMemo(() => {
+        return todoArr.filter((t) => {
+            return !t.isCompleted;
+        })
+    },[todoArr])
     let todoToBeRendered = todoArr;
     if (displayedTodoType == "completed") {
         todoToBeRendered = completedTodos;
@@ -65,7 +68,7 @@ export default function ToDoList() {
     // End function handleChange
     return (
         <Container maxWidth="sm"  >
-            <Card sx={{ minWidth: 500, textAlign: "center", maxHeight:"80vh", overflowY:"auto   " }}>
+            <Card sx={{ minWidth: 500, textAlign: "center", maxHeight: "80vh", overflowY: "auto   " }}>
                 <CardContent >
                     <Typography variant='h3' sx={{ fontWeight: "bold" }}>
                         مهامي
