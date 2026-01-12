@@ -5,7 +5,6 @@ import Grid from '@mui/material/Grid';
 import { Box } from '@mui/material';
 import { useContext } from 'react';
 import { TodoContext } from '../contexts/todoContext';
-import * as React from 'react';
 // ICONS
 import IconButton from '@mui/material/IconButton';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -26,35 +25,14 @@ export default function ToDo({ todo, DialogDelete, DialogUpdate }) {
         localStorage.setItem("todos", JSON.stringify(updatedToDos));
     }
     //end funtion Completed
-    //=====================//
-    // The status of deletion
-
-    //=====================//
-    // The status of the UPDATE
-
-    // const [updateToDo, setUpdateToDo] = React.useState({ title: todo.title, details: todo.details });
-    //=====================//
-    //#####################//
-    //=====================//
     const handleDeleteClick = () => {
         DialogDelete(todo);
     };
-    //=====================//
-    //#####################//
-    //=====================//
-    // start function   UPDATE
-
     const handleUpdateDailogOpen = () => {
         DialogUpdate(todo);
     }
-
-    // end function UPDATE
-    //=====================//
     return (
         <>
-
-            {/*#####################*/}
-
             <Card className="card" sx={{ minWidth: 275, textAlign: "center", color: "white", mt: 2, backgroundColor: "#283583" }}>
                 <CardContent  >
                     <Grid container spacing={2} sx={{
