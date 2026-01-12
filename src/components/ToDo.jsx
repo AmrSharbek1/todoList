@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ModeOutlinedIcon from '@mui/icons-material/ModeOutlined';
 import DoneIcon from '@mui/icons-material/Done';
-export default function ToDo({ todo }) {
+export default function ToDo({ todo, DialogDelete }) {
     const { todoArr, SetToDoArr } = useContext(TodoContext);
     //=====================//
     //start funtion Completed
@@ -35,7 +35,7 @@ export default function ToDo({ todo }) {
     //end funtion Completed
     //=====================//
     // The status of deletion
-    const [showDeleteDialog, setShowDeleteDialog,] = React.useState(false);
+
     //=====================//
     // The status of the UPDATE
     const [showUpdateDialog, setShowUpdateDialog] = React.useState(false);
@@ -43,22 +43,9 @@ export default function ToDo({ todo }) {
     //=====================//
     //#####################//
     //=====================//
-    // start function delete
     const handleDeleteClick = () => {
-        setShowDeleteDialog(true);
+        DialogDelete(todo);
     };
-    const handleDeleteDialogClose = () => {
-        setShowDeleteDialog(false);
-    }
-    const handleCloseAndDelete = () => {
-        setShowDeleteDialog(false);
-        const deleteToDo = todoArr.filter((t) => {
-            return t.id != todo.id;
-        })
-        SetToDoArr(deleteToDo)
-        localStorage.setItem("todos", JSON.stringify(deleteToDo));
-    };
-    // end function delete
     //=====================//
     //#####################//
     //=====================//
@@ -85,29 +72,7 @@ export default function ToDo({ todo }) {
     //=====================//
     return (
         <>
-            {/* DELETE MODAL  */}
-            <Dialog
-                open={showDeleteDialog}
-                onClose={handleDeleteDialogClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title" sx={{ textDecoration: "rtl" }}>
-                    هل انت متاكد من رغبتك في حذف المهمة ؟
-                </DialogTitle>
-                <DialogContent sx={{ textAlign: "right", pr: 3.5 }}>
-                    <DialogContentText id="alert-dialog-description">
-                        لا يمكنك التراجع عن الحذف في  حال اختيار زر الحذف
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAndDelete} sx={{ color: "red" }}>نعم , احذف</Button>
-                    <Button onClick={handleDeleteDialogClose} autoFocus>
-                        اغلاق
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            {/* ===DELETE MODAL===  */}
+
             {/*#####################*/}
             {/* UPDATE MODAL  */}
             <Dialog
@@ -158,7 +123,7 @@ export default function ToDo({ todo }) {
                     }}>
                         <Grid size={8} >
                             <Box sx={{ textAlign: "right" }}>
-                                <Typography variant='h5' sx={{ textDecoration: todo.isCompleted ? "line-through" : "" , color:todo.isCompleted ? "#575960ff" : "white" }} >{todo.title}</Typography>
+                                <Typography variant='h5' sx={{ textDecoration: todo.isCompleted ? "line-through" : "", color: todo.isCompleted ? "#575960ff" : "white" }} >{todo.title}</Typography>
                                 <Typography variant="h6" sx={{ fontWeight: "200" }} >{todo.details}</Typography>
                             </Box>
                         </Grid>
