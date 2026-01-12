@@ -26,6 +26,7 @@ export default function ToDoList() {
     const [displayedTodoType, setDisplayedTodoType] = React.useState('all');
     const [title, setTitle] = React.useState("");
     const [showDeleteDialog, setShowDeleteDialog,] = React.useState(false);
+    const [showUpdateDialog, setShowUpdateDialog] = React.useState(false);
     const [DialogTodo, setDialogTodo] = React.useState(null);
     // End State    
     // start function handleChange
@@ -83,10 +84,30 @@ export default function ToDoList() {
         localStorage.setItem("todos", JSON.stringify(deleteToDo));
     };
     // end function delete
+    // start function update
+    const openUpdateDialog = (todo) => {
+        setDialogTodo(todo);
+        setShowUpdateDialog(true);
+    }
+    const handleUpdateDailogClose = () => {
+        setShowUpdateDialog(false);
+    }
+    const handleCloseAndUpdate = () => {
+        const update = todoArr.map((t) => {
+            if (t.id == DialogTodo.id) {
+                return { ...t, title: DialogTodo.title, details: DialogTodo.details }
+            } else {
+                return t;
+            }
+        })
+        SetToDoArr(update);
+        localStorage.setItem("todos", JSON.stringify(update));
+        setShowUpdateDialog(false);
+    }
     // End function handleChange
     const todosJSX = todoToBeRendered.map((todo) => {
         return (
-            <ToDo key={todo.id} todo={todo} DialogDelete={handleDailog} />
+            <ToDo key={todo.id} todo={todo} DialogDelete={handleDailog} DialogUpdate={openUpdateDialog} />
         )
     })
     return (
@@ -114,6 +135,47 @@ export default function ToDoList() {
                 </DialogActions>
             </Dialog>
             {/* ===DELETE MODAL===  */}
+            {/* UPDATE MODAL  */}
+            <Dialog
+                open={showUpdateDialog}
+                onClose={handleUpdateDailogClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title" sx={{ textDecoration: "rtl" }}>
+                    تعديل المهمة
+                </DialogTitle>
+                <DialogContent sx={{ textAlign: "right", pr: 3.5 }}>
+                    <TextField
+                        autoFocus
+                        label="عنوان المهمة"
+                        type="text"
+                        fullWidth
+                        variant="standard" 
+                        value={DialogTodo ? DialogTodo.title : ""}
+                        onChange={(e) => {
+                            setDialogTodo({ ...DialogTodo, title: e.target.value });
+                        }}
+                    />
+                    <TextField
+                        label="التفاصيل"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={ DialogTodo ? DialogTodo.details : ""}
+                        onChange={(e) => {
+                            setDialogTodo({ ...DialogTodo, details: e.target.value });
+                        }}
+                    />  
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseAndUpdate} sx={{ color: "red" }}>تحديث</Button>
+                    <Button onClick={handleUpdateDailogClose} autoFocus>
+                        اغلاق
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            {/*===UPDATE MODAL===*/}
             <Container maxWidth="sm"  >
                 <Card sx={{ minWidth: 500, textAlign: "center", maxHeight: "80vh", overflowY: "auto   " }}>
                     <CardContent >

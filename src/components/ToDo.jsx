@@ -6,19 +6,12 @@ import { Box } from '@mui/material';
 import { useContext } from 'react';
 import { TodoContext } from '../contexts/todoContext';
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 // ICONS
 import IconButton from '@mui/material/IconButton';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ModeOutlinedIcon from '@mui/icons-material/ModeOutlined';
 import DoneIcon from '@mui/icons-material/Done';
-export default function ToDo({ todo, DialogDelete }) {
+export default function ToDo({ todo, DialogDelete, DialogUpdate }) {
     const { todoArr, SetToDoArr } = useContext(TodoContext);
     //=====================//
     //start funtion Completed
@@ -38,8 +31,8 @@ export default function ToDo({ todo, DialogDelete }) {
 
     //=====================//
     // The status of the UPDATE
-    const [showUpdateDialog, setShowUpdateDialog] = React.useState(false);
-    const [updateToDo, setUpdateToDo] = React.useState({ title: todo.title, details: todo.details });
+
+    // const [updateToDo, setUpdateToDo] = React.useState({ title: todo.title, details: todo.details });
     //=====================//
     //#####################//
     //=====================//
@@ -50,71 +43,18 @@ export default function ToDo({ todo, DialogDelete }) {
     //#####################//
     //=====================//
     // start function   UPDATE
-    const handleUpdateDailogClose = () => {
-        setShowUpdateDialog(false);
-    }
+
     const handleUpdateDailogOpen = () => {
-        setShowUpdateDialog(true);
+        DialogUpdate(todo);
     }
-    const handleCloseAndUpdate = () => {
-        const update = todoArr.map((t) => {
-            if (t.id == todo.id) {
-                return { ...t, title: updateToDo.title, details: updateToDo.details }
-            } else {
-                return t;
-            }
-        })
-        SetToDoArr(update);
-        localStorage.setItem("todos", JSON.stringify(update));
-        setShowUpdateDialog(false);
-    }
+
     // end function UPDATE
     //=====================//
     return (
         <>
 
             {/*#####################*/}
-            {/* UPDATE MODAL  */}
-            <Dialog
-                open={showUpdateDialog}
-                onClose={handleUpdateDailogClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title" sx={{ textDecoration: "rtl" }}>
-                    تعديل المهمة
-                </DialogTitle>
-                <DialogContent sx={{ textAlign: "right", pr: 3.5 }}>
-                    <TextField
-                        autoFocus
-                        label="عنوان المهمة"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={updateToDo.title}
-                        onChange={(e) => {
-                            setUpdateToDo({ ...updateToDo, title: e.target.value });
-                        }}
-                    />
-                    <TextField
-                        label="التفاصيل"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={updateToDo.details}
-                        onChange={(e) => {
-                            setUpdateToDo({ ...updateToDo, details: e.target.value });
-                        }}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAndUpdate} sx={{ color: "red" }}>تحديث</Button>
-                    <Button onClick={handleUpdateDailogClose} autoFocus>
-                        اغلاق
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            {/*===UPDATE MODAL===*/}
+
             <Card className="card" sx={{ minWidth: 275, textAlign: "center", color: "white", mt: 2, backgroundColor: "#283583" }}>
                 <CardContent  >
                     <Grid container spacing={2} sx={{
