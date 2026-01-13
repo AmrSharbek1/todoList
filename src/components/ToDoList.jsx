@@ -104,6 +104,7 @@ export default function ToDoList() {
         localStorage.setItem("todos", JSON.stringify(update));
         setShowUpdateDialog(false);
     }
+     // end function update
     // End function handleChange
     const todosJSX = todoToBeRendered.map((todo) => {
         return (
