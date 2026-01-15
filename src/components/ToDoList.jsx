@@ -16,12 +16,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { ToastContext } from '../contexts/toastContext';
 // components 
 import ToDo from './ToDo';
 //  OTHERS
 import { v4 as uuidv4 } from 'uuid';
 export default function ToDoList() {
     const { todoArr, SetToDoArr } = useContext(TodoContext);
+    const { setToastColor, setMassageToast, showHideToast } = useContext(ToastContext);
     // Start State
     const [displayedTodoType, setDisplayedTodoType] = React.useState('all');
     const [title, setTitle] = React.useState("");
@@ -65,9 +67,7 @@ export default function ToDoList() {
     } else if (displayedTodoType == "non-completed") {
         todoToBeRendered = notCompletedTodos;
     }
-
     // start function delete
-
     const handleDeleteDialogClose = () => {
         setShowDeleteDialog(false);
     }
@@ -81,6 +81,9 @@ export default function ToDoList() {
             return t.id != DialogTodo.id;
         })
         SetToDoArr(deleteToDo)
+        setMassageToast("تم الحذف بنجاح")
+        setToastColor(false);
+        showHideToast();
         localStorage.setItem("todos", JSON.stringify(deleteToDo));
     };
     // end function delete
@@ -101,10 +104,13 @@ export default function ToDoList() {
             }
         })
         SetToDoArr(update);
+        setMassageToast("تم التعديل بنجاح")
+        setToastColor(true);
+        showHideToast();
         localStorage.setItem("todos", JSON.stringify(update));
         setShowUpdateDialog(false);
     }
-     // end function update
+    // end function update
     // End function handleChange
     const todosJSX = todoToBeRendered.map((todo) => {
         return (
@@ -152,7 +158,7 @@ export default function ToDoList() {
                         label="عنوان المهمة"
                         type="text"
                         fullWidth
-                        variant="standard" 
+                        variant="standard"
                         value={DialogTodo ? DialogTodo.title : ""}
                         onChange={(e) => {
                             setDialogTodo({ ...DialogTodo, title: e.target.value });
@@ -163,11 +169,11 @@ export default function ToDoList() {
                         type="text"
                         fullWidth
                         variant="standard"
-                        value={ DialogTodo ? DialogTodo.details : ""}
+                        value={DialogTodo ? DialogTodo.details : ""}
                         onChange={(e) => {
                             setDialogTodo({ ...DialogTodo, details: e.target.value });
                         }}
-                    />  
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseAndUpdate} sx={{ color: "red" }}>تحديث</Button>

@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import { Box } from '@mui/material';
 import { useContext } from 'react';
 import { TodoContext } from '../contexts/todoContext';
+import { ToastContext } from '../contexts/toastContext';
 // ICONS
 import IconButton from '@mui/material/IconButton';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -12,6 +13,7 @@ import ModeOutlinedIcon from '@mui/icons-material/ModeOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 export default function ToDo({ todo, DialogDelete, DialogUpdate }) {
     const { todoArr, SetToDoArr } = useContext(TodoContext);
+    const { showHideToast, setMassageToast,setToastColor } = useContext(ToastContext);
     //=====================//
     //start funtion Completed
     const handleCheckClick = () => {
@@ -21,7 +23,19 @@ export default function ToDo({ todo, DialogDelete, DialogUpdate }) {
             }
             return t;
         })
+        const ShowToast = todoArr.map((t) => {
+            if (!t.isCompleted) {
+                setToastColor(true)
+                return "تم اضافة المهمة الى المنجز";
+                
+            } else {
+                setToastColor(false)
+                return "تم ازلة المهمة من المنجز"
+            }
+        })
         SetToDoArr(updatedToDos);
+        setMassageToast(ShowToast);
+        showHideToast();
         localStorage.setItem("todos", JSON.stringify(updatedToDos));
     }
     //end funtion Completed
