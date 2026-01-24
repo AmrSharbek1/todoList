@@ -13,7 +13,7 @@ import ModeOutlinedIcon from '@mui/icons-material/ModeOutlined';
 import DoneIcon from '@mui/icons-material/Done';
 export default function ToDo({ todo, DialogDelete, DialogUpdate }) {
     const { todoArr, SetToDoArr } = useContext(TodoContext);
-    const { showHideToast, setMassageToast,setToastColor } = useContext(ToastContext);
+    const { showHideToast, setMassageToast, setToastColor } = useContext(ToastContext);
     //=====================//
     //start funtion Completed
     const handleCheckClick = () => {
@@ -23,18 +23,17 @@ export default function ToDo({ todo, DialogDelete, DialogUpdate }) {
             }
             return t;
         })
-        const ShowToast = todoArr.map((t) => {
-            if (!t.isCompleted) {
-                setToastColor(true)
-                return "تم اضافة المهمة الى المنجز";
-                
-            } else {
-                setToastColor(false)
-                return "تم ازلة المهمة من المنجز"
-            }
-        })
+
+        if (!todo.isCompleted) {
+            setToastColor(true)
+            setMassageToast("تم اضافة المهمة الى المنجز");
+
+        } else {
+            setToastColor(false);
+            setMassageToast("تم ازاله المهمة من المنجز")
+        }
+
         SetToDoArr(updatedToDos);
-        setMassageToast(ShowToast);
         showHideToast();
         localStorage.setItem("todos", JSON.stringify(updatedToDos));
     }
