@@ -16,14 +16,14 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { ToastContext } from '../contexts/toastContext';
+import { useToast } from '../contexts/useToast';
 // components 
 import ToDo from './ToDo';
 //  OTHERS
 import { v4 as uuidv4 } from 'uuid';
 export default function ToDoList() {
     const { todoArr, SetToDoArr } = useContext(TodoContext);
-    const { setToastColor, setMassageToast, showHideToast } = useContext(ToastContext);
+    const { setToastColor, setMessageToast, showHideToast } = useToast();
     // Start State
     const [displayedTodoType, setDisplayedTodoType] = React.useState('all');
     const [title, setTitle] = React.useState("");
@@ -81,7 +81,7 @@ export default function ToDoList() {
             return t.id != DialogTodo.id;
         })
         SetToDoArr(deleteToDo)
-        setMassageToast("تم الحذف بنجاح")
+        setMessageToast("تم الحذف بنجاح")
         setToastColor(false);
         showHideToast();
         localStorage.setItem("todos", JSON.stringify(deleteToDo));
@@ -104,7 +104,7 @@ export default function ToDoList() {
             }
         })
         SetToDoArr(update);
-        setMassageToast("تم التعديل بنجاح")
+        setMessageToast("تم التعديل بنجاح")
         setToastColor(true);
         showHideToast();
         localStorage.setItem("todos", JSON.stringify(update));

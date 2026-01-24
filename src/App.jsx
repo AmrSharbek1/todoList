@@ -1,35 +1,24 @@
 import './App.css'
-import * as React from 'react';
 import ToDoList from './components/ToDoList'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { TodoContext } from './contexts/todoContext';
-import MySnackBar from './components/MySnackBar';
-import { ToastContext } from './contexts/toastContext';
+import { ToastProvider } from './components/ToastProvider';
+import { useState } from 'react';
 const theme = createTheme({
   typography: {
     fontFamily: ["Alexandria"]
   }
 })
 function App() {
-  const [todoArr, SetToDoArr] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
-  const [massageToast, setMassageToast] = React.useState("");
-  const [toastColor, setToastColor] = React.useState(true);
-  const showHideToast = () => {
-    setOpen(true);
-    setTimeout(() => { 
-      setOpen(false);
-    }, 2500);
-  }
+  const [todoArr, SetToDoArr] = useState([]);
   return (
     <ThemeProvider theme={theme}>
       <div className='mainDiv'>
-        <ToastContext.Provider value={{ toastColor, setToastColor, open, massageToast, setMassageToast, showHideToast }}>
-          <MySnackBar />
+        <ToastProvider >
           <TodoContext.Provider value={{ todoArr, SetToDoArr }}>
             <ToDoList />
           </TodoContext.Provider>
-        </ToastContext.Provider>
+        </ToastProvider>
       </div>
     </ThemeProvider>
   )

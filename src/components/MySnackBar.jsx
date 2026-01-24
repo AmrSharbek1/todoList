@@ -5,7 +5,7 @@ import Alert from '@mui/material/Alert';
 import { useContext } from 'react';
 import { ToastContext } from '../contexts/toastContext';
 export default function MySnackBar() {
-    const { open, massageToast, toastColor } = useContext(ToastContext);
+    const { open, messageToast, toastColor } = useContext(ToastContext);
 
     return (
         <div>
@@ -15,7 +15,7 @@ export default function MySnackBar() {
                     variant="filled"
                     sx={{ width: '100%',backgroundColor: toastColor ? "green" : "red"  }}
                 >
-                    {massageToast}
+                    {messageToast}
                 </Alert>
             </Snackbar>
         </div>
